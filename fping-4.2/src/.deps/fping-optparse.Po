@@ -1,0 +1,5 @@
+fping-optparse.o: optparse.c /usr/include/stdc-predef.h optparse.h
+
+/usr/include/stdc-predef.h:
+
+optparse.h:
