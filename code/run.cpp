@@ -4,7 +4,7 @@
 #include <cassert>
 #include <vector>
 
-#define THREADS 50
+#define THREADS 36
 
 using namespace std;
 

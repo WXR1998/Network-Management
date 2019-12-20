@@ -16,3 +16,4 @@
     get_location函数调用了百度地图API，给定一个字符串形式的ip地址，返回 (省份名，经度，纬度)
 
 ## main.py
+    run_ping函数有一个可选参数：checkpoint，表示从第几个省份开始ping。
