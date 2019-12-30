@@ -1647,11 +1647,12 @@ void print_global_stats(void)
     //     timeval_diff(&end_time, &start_time) / 100000.0);
     // fprintf(stderr, "\n");
     if (outfile != NULL){
-        FILE *fout = fopen(outfile, "w");
-        fprintf(fout, "%d %s\n", num_alive, 
-            sprint_tm((int)(sum_replies / total_replies)));
-        fclose(fout);
+        // FILE *fout = fopen(outfile, "w");
+        // fprintf(fout, "%d %s\n", num_alive, sprint_tm((int)(sum_replies / total_replies)));
+        // fclose(fout);
     }
+    printf("%d %s\n", num_alive, sprint_tm((int)(sum_replies / total_replies)));
+    fflush(stdout);
 }
 
 /************************************************************
@@ -2186,7 +2187,7 @@ int wait_for_reply(long wait_time)
                     if (addr_cmp((struct sockaddr*)&response_addr, (struct sockaddr*)&h->saddr)) {
                         char buf[INET6_ADDRSTRLEN];
                         getnameinfo((struct sockaddr*)&response_addr, sizeof(response_addr), buf, INET6_ADDRSTRLEN, NULL, 0, NI_NUMERICHOST);
-                        fprintf(stderr, " [<- %s]", buf);
+                        // fprintf(stderr, " [<- %s]", buf);
                     }
                     // fprintf(stderr, "\n");
                 }
@@ -2215,7 +2216,7 @@ int wait_for_reply(long wait_time)
             if (addr_cmp((struct sockaddr*)&response_addr, (struct sockaddr*)&h->saddr)) {
                 char buf[INET6_ADDRSTRLEN];
                 getnameinfo((struct sockaddr*)&response_addr, sizeof(response_addr), buf, INET6_ADDRSTRLEN, NULL, 0, NI_NUMERICHOST);
-                fprintf(stderr, " [<- %s]", buf);
+                // fprintf(stderr, " [<- %s]", buf);
             }
 
             printf("\n");
@@ -2245,7 +2246,7 @@ int wait_for_reply(long wait_time)
         if (addr_cmp((struct sockaddr*)&response_addr, (struct sockaddr*)&h->saddr)) {
             char buf[INET6_ADDRSTRLEN];
             getnameinfo((struct sockaddr*)&response_addr, sizeof(response_addr), buf, INET6_ADDRSTRLEN, NULL, 0, NI_NUMERICHOST);
-            fprintf(stderr, " [<- %s]", buf);
+            // fprintf(stderr, " [<- %s]", buf);
         }
 
         printf("\n");

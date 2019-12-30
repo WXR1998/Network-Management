@@ -3,6 +3,8 @@ import os.path as osp
 import os
 import sys
 
+LIM = 2000000
+
 ispi2n = []
 ispn2i = {}
 isps = []
@@ -71,9 +73,13 @@ def get_ISP(ip):
 
 def run_ping(start):
     for i in range(start, len(prvi2n)):     # 逐省
+        # 为了效率起见，每个省设置200w个ip的限制
+        count = 0
         prv_name = prvi2n[i]
         prv_ips = prvs[i]
         for ran in prv_ips: # 每个IP段
+            if count > LIM:
+                break
             st = int2ip(ran[0])
             ed = int2ip(ran[1])
             a, b, c, _ = [int(_) for _ in st.split('.')]
@@ -85,22 +91,42 @@ def run_ping(start):
             if not os.path.exists('../final_result/%03d_%03d_%03d_%03d_%03d_%03d.txt' % ipseg_list):
                 os.system('./run %d %d %d %d %d %d' % ipseg_list)
 
-                # 为了节省空间，每次运行完一个ip段之后会把结果汇总成一个文件
-                ipseg_sum, ipseg_alive_sum, ipseg_avgping_sum = 0.0, 0.0, 0.0
-                with open(osp.join('../final_result/', '%03d_%03d_%03d_%03d_%03d_%03d.txt' % ipseg_list), 'w') as fout:
-                    for root, dirs, files in os.walk('../result/'):
-                        for file in files:
-                            ip = file.split('.')[0].replace('_', '.') + '.0'
-                            with open(osp.join(root, file), 'r') as fin:
-                                alive, avgping = [float(_) for _ in fin.readline().split()]
-                                ipseg_alive_sum += alive
-                                ipseg_avgping_sum += avgping * alive
-                                ipseg_sum += 256
-                            fout.write('%.0f %.2f\n' % (alive, avgping))
-                    os.system('rm ../result/*')
-                print("%.0f/%.0f %.2f" % (ipseg_alive_sum, ipseg_sum, ipseg_avgping_sum / (ipseg_alive_sum if ipseg_alive_sum > 0 else 1)))
+                # # 为了节省空间，每次运行完一个ip段之后会把结果汇总成一个文件
+                # ipseg_sum, ipseg_alive_sum, ipseg_avgping_sum = 0.0, 0.0, 0.0
+                # with open(osp.join('../final_result/', '%03d_%03d_%03d_%03d_%03d_%03d.txt' % ipseg_list), 'w') as fout:
+                #     for root, dirs, files in os.walk('../result/'):
+                #         for file in files:
+                #             ip = file.split('.')[0].replace('_', '.') + '.0'
+                #             with open(osp.join(root, file), 'r') as fin:
+                #                 alive, avgping = [float(_) for _ in fin.readline().split()]
+                #                 ipseg_alive_sum += alive
+                #                 ipseg_avgping_sum += avgping * alive
+                #                 ipseg_sum += 256
+                #                 count += 256
+                #             fout.write('%.0f %.2f\n' % (alive, avgping))
+                #     os.system('rm ../result/*')
+                # print("%.0f/%.0f %.2f" % (ipseg_alive_sum, ipseg_sum, ipseg_avgping_sum / (ipseg_alive_sum if ipseg_alive_sum > 0 else 1)))
+            count += (((d-a)*256+(e-b))*256+(f-c+1))*256
 
         print('Province %d [%s] complete.' % (i, prvi2n[i]))
+
+def show_result():
+    for i in range(start, len(prvi2n)):     # 逐省
+        prv_name = prvi2n[i]
+        prv_ips = prvs[i]
+        for ran in prv_ips: # 每个IP段
+            st = int2ip(ran[0])
+            ed = int2ip(ran[1])
+            a, b, c, _ = [int(_) for _ in st.split('.')]
+            d, e, f, _ = [int(_) for _ in ed.split('.')]
+
+            ipseg_list = (a, b, c, d, e, f)
+            
+            if os.path.exists('../final_result/%03d_%03d_%03d_%03d_%03d_%03d.txt' % ipseg_list):
+                print('%3d.%3d.%3d  ---  %3d.%3d.%3d complete' % ipseg_list)
+
+        print('Province %d [%s] complete.' % (i, prvi2n[i]))
+
 
 if __name__ == '__main__':
     init_ISP()
@@ -112,3 +138,4 @@ if __name__ == '__main__':
         start = int(sys.argv[1])
     
     run_ping(start)
+    # show_result()

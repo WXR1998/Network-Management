@@ -23,3 +23,6 @@ def get_location(ip):
 
     point = t['content']['point']
     return t['content']['address_detail']['province'], float(point['x']), float(point['y'])
+
+# if __name__ == '__main__':
+#     print(get_location('166.111.4.100'))
